@@ -1,7 +1,9 @@
 import { Figtree } from "next/font/google";
 import "./globals.css";
 
+import React from "react";
 import Sidebar from "@/components/sidebar";
+import SuperbaseProvider from "@/components/providers/supabase";
 
 const figtree = Figtree({ subsets: ["latin"] });
 
@@ -21,10 +23,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={figtree.className}>
-      <body className="bg-background text-foreground">
-        <Sidebar>{children}</Sidebar>
-      </body>
-    </html>
+    <React.StrictMode>
+      <html lang="en" className={figtree.className}>
+        <body className="bg-background text-foreground">
+          <SuperbaseProvider>
+            <Sidebar>{children}</Sidebar>
+          </SuperbaseProvider>
+        </body>
+      </html>
+    </React.StrictMode>
   );
 }

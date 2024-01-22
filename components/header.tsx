@@ -6,7 +6,7 @@ import { BiSearch } from "react-icons/bi";
 import { HiHome } from "react-icons/hi";
 import { RxCaretLeft, RxCaretRight } from "react-icons/rx";
 import { twMerge } from "tailwind-merge";
-import { AuthenticationContext } from "./sidebar";
+import { SupabaseProviderContext } from "./providers/supabase";
 
 import Button from "./button";
 
@@ -16,10 +16,8 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ children, className }) => {
-  const { user, signIn, signOut } = useContext(AuthenticationContext) ?? {};
+  const { user, signIn, signOut } = useContext(SupabaseProviderContext) ?? {};
   const router = useRouter();
-
-  console.log("user: ", user);
 
   return (
     <div
