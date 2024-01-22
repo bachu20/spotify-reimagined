@@ -1,10 +1,12 @@
 "use client";
 
+import { useContext } from "react";
 import { useRouter } from "next/navigation";
 import { BiSearch } from "react-icons/bi";
 import { HiHome } from "react-icons/hi";
 import { RxCaretLeft, RxCaretRight } from "react-icons/rx";
 import { twMerge } from "tailwind-merge";
+import { AuthenticationContext } from "./sidebar";
 
 import Button from "./button";
 
@@ -14,11 +16,10 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ children, className }) => {
+  const { user, signIn, signOut } = useContext(AuthenticationContext) ?? {};
   const router = useRouter();
 
-  const handleLogout = () => {
-    // Handle logout in the future
-  };
+  console.log("user: ", user);
 
   return (
     <div
@@ -63,8 +64,11 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
             </div>
 
             <div>
-              <Button onClick={() => {}} className="bg-white px-6 py-2">
-                Log in
+              <Button
+                onClick={user ? signOut : signIn}
+                className="bg-white px-6 py-2"
+              >
+                Log {user ? "out" : "in"}
               </Button>
             </div>
           </>
