@@ -16,8 +16,6 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ children }) => {
   const pathname = usePathname();
 
-  console.log("pathname: ", pathname);
-
   const routes = useMemo(
     () => [
       {

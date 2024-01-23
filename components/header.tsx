@@ -1,10 +1,12 @@
 "use client";
 
+import { useContext } from "react";
 import { useRouter } from "next/navigation";
 import { BiSearch } from "react-icons/bi";
 import { HiHome } from "react-icons/hi";
 import { RxCaretLeft, RxCaretRight } from "react-icons/rx";
 import { twMerge } from "tailwind-merge";
+import { SupabaseProviderContext } from "./providers/supabase";
 
 import Button from "./button";
 
@@ -14,11 +16,8 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ children, className }) => {
+  const { user, signIn, signOut } = useContext(SupabaseProviderContext) ?? {};
   const router = useRouter();
-
-  const handleLogout = () => {
-    // Handle logout in the future
-  };
 
   return (
     <div
@@ -63,8 +62,11 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
             </div>
 
             <div>
-              <Button onClick={() => {}} className="bg-white px-6 py-2">
-                Log in
+              <Button
+                onClick={user ? signOut : signIn}
+                className="bg-white px-6 py-2"
+              >
+                Log {user ? "out" : "in"}
               </Button>
             </div>
           </>
