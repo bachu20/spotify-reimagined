@@ -2,34 +2,39 @@
 
 import { useState, useEffect, createContext } from "react";
 import { createClient } from "@/utils/supabase/client";
-import { User, Session, AuthChangeEvent } from "@supabase/supabase-js";
+import {
+  Session,
+  AuthChangeEvent,
+  SupabaseClient,
+} from "@supabase/supabase-js";
+import { Database } from "@/types/database";
 
 interface SupabaseProviderProps {
   children: React.ReactNode;
 }
 
-interface ProviderProps {
-  user: User | null;
+interface Props {
+  supabase: SupabaseClient<Database>;
+  session: Session | undefined;
   signIn(): Promise<void>;
   signOut(): Promise<void>;
 }
 
-export const SupabaseProviderContext = createContext<ProviderProps | null>(
-  null
+export const SupabaseProviderContext = createContext<Props | undefined>(
+  undefined
 );
 
 const SuperbaseProvider: React.FC<SupabaseProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | undefined>(undefined);
 
   const supabase = createClient();
 
   useEffect(() => {
-    console.log("use effect called");
     async function updateSession() {
       const { data } = await supabase.auth.getSession();
 
       if (data && data.session) {
-        setUser(data.session.user);
+        setSession(data.session);
       }
     }
 
@@ -37,9 +42,7 @@ const SuperbaseProvider: React.FC<SupabaseProviderProps> = ({ children }) => {
 
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (event: AuthChangeEvent, session: Session | null) => {
-        console.log("use effect <on session change> called");
-
-        setUser(session?.user ?? null);
+        setSession(session || undefined);
       }
     );
 
@@ -62,7 +65,9 @@ const SuperbaseProvider: React.FC<SupabaseProviderProps> = ({ children }) => {
   };
 
   return (
-    <SupabaseProviderContext.Provider value={{ user, signIn, signOut }}>
+    <SupabaseProviderContext.Provider
+      value={{ supabase, session, signIn, signOut }}
+    >
       {children}
     </SupabaseProviderContext.Provider>
   );
