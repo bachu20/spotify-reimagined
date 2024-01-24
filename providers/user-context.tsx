@@ -1,6 +1,6 @@
 import { User } from "@supabase/supabase-js";
 import { createContext, useContext, useState, useEffect } from "react";
-import { SupabaseProviderContext } from "@/components/providers/supabase";
+import { SupabaseProviderContext } from "./supabase";
 import { Subscription, UserDetails } from "@/types/stripe";
 
 type UserContextType = {
@@ -20,7 +20,7 @@ export interface Props {
 }
 
 export const MyUserContextProvider = (props: Props) => {
-  const { supabase, session } = useContext(SupabaseProviderContext) ?? {};
+  const { supabase, session } = useContext(SupabaseProviderContext);
   const [isLoadingData, setIsLoadingData] = useState(false);
   const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
   const [subscription, setSubscription] = useState<Subscription | null>(null);
@@ -28,13 +28,13 @@ export const MyUserContextProvider = (props: Props) => {
   const accessToken = session?.access_token ?? null;
 
   const getUserDetails = () => {
-    return supabase?.from("users").select("*").single();
+    return supabase.from("users").select("*").single();
   };
 
   const getSubscription = () => {
     return supabase
-      ?.from("subscriptions")
-      .select("*, prices(*, product(*))")
+      .from("subscriptions")
+      .select("*, prices(*, products(*))")
       .in("status", ["trialing", "active"])
       .single();
   };
