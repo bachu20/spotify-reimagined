@@ -1,7 +1,7 @@
 import { User } from "@supabase/supabase-js";
 import { createContext, useContext, useState, useEffect } from "react";
 import { SupabaseProviderContext } from "./supabase";
-import { Subscription, UserDetails } from "@/types/stripe";
+import { Subscription, UserDetails } from "@/types/common";
 
 type UserContextType = {
   accessToken: string | null;

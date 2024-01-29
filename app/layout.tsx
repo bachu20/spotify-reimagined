@@ -7,6 +7,7 @@ import SuperbaseProvider from "@/providers/supabase";
 import UserProvider from "@/providers/user";
 import ModalProvider from "@/providers/modal";
 import ToasterProvider from "@/providers/toaster";
+import { getSongsByUserId } from "@/actions/songs";
 
 const figtree = Figtree({ subsets: ["latin"] });
 
@@ -20,11 +21,15 @@ export const metadata = {
   description: "Listen to music!",
 };
 
-export default function RootLayout({
+export const revalidate = 0;
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const userSongs = await getSongsByUserId();
+
   return (
     <React.StrictMode>
       <html lang="en" className={figtree.className}>
@@ -33,7 +38,7 @@ export default function RootLayout({
           <SuperbaseProvider>
             <UserProvider>
               <ModalProvider />
-              <Sidebar>{children}</Sidebar>
+              <Sidebar songs={userSongs}>{children}</Sidebar>
             </UserProvider>
           </SuperbaseProvider>
         </body>
