@@ -3,7 +3,10 @@ import "./globals.css";
 
 import React from "react";
 import Sidebar from "@/components/sidebar";
-import SuperbaseProvider from "@/components/providers/supabase";
+import SuperbaseProvider from "@/providers/supabase";
+import UserProvider from "@/providers/user";
+import ModalProvider from "@/providers/modal";
+import ToasterProvider from "@/providers/toaster";
 
 const figtree = Figtree({ subsets: ["latin"] });
 
@@ -26,8 +29,12 @@ export default function RootLayout({
     <React.StrictMode>
       <html lang="en" className={figtree.className}>
         <body className="bg-background text-foreground">
+          <ToasterProvider />
           <SuperbaseProvider>
-            <Sidebar>{children}</Sidebar>
+            <UserProvider>
+              <ModalProvider />
+              <Sidebar>{children}</Sidebar>
+            </UserProvider>
           </SuperbaseProvider>
         </body>
       </html>

@@ -16,18 +16,17 @@ interface SupabaseProviderProps {
 interface Props {
   supabase: SupabaseClient<Database>;
   session: Session | undefined;
-  signIn(): Promise<void>;
-  signOut(): Promise<void>;
 }
 
-export const SupabaseProviderContext = createContext<Props | undefined>(
-  undefined
-);
+const supabase = createClient();
+
+export const SupabaseProviderContext = createContext<Props>({
+  supabase,
+  session: undefined,
+});
 
 const SuperbaseProvider: React.FC<SupabaseProviderProps> = ({ children }) => {
   const [session, setSession] = useState<Session | undefined>(undefined);
-
-  const supabase = createClient();
 
   useEffect(() => {
     async function updateSession() {
@@ -51,23 +50,8 @@ const SuperbaseProvider: React.FC<SupabaseProviderProps> = ({ children }) => {
     };
   }, []);
 
-  const signIn = async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: window.location.origin,
-      },
-    });
-  };
-
-  const signOut = async () => {
-    await supabase.auth.signOut();
-  };
-
   return (
-    <SupabaseProviderContext.Provider
-      value={{ supabase, session, signIn, signOut }}
-    >
+    <SupabaseProviderContext.Provider value={{ supabase, session }}>
       {children}
     </SupabaseProviderContext.Provider>
   );
