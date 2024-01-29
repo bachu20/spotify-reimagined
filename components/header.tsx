@@ -30,7 +30,7 @@ const Header: React.FC<HeaderProps> = ({ children, className }) => {
     // TODO: Reset any playing songs
     router.refresh();
 
-    error && toast.error(error.message);
+    error ? toast.error(error.message) : toast.success("Logged out!");
   };
 
   return (
