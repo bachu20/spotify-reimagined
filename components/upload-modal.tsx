@@ -33,6 +33,15 @@ const UploadModal = () => {
     }
   };
 
+  const onUploadSuccess = () => {
+    router.refresh();
+    uploadModal.onClose();
+    setIsLoading(false);
+    reset();
+
+    toast.success("Song uploaded!");
+  };
+
   const onSubmit: SubmitHandler<FieldValues> = async (values) => {
     try {
       setIsLoading(true);
@@ -82,10 +91,7 @@ const UploadModal = () => {
         throw insertResponse.error;
       }
 
-      router.refresh();
-      setIsLoading(false);
-      toast.success("Song uploaded!");
-      uploadModal.onClose();
+      onUploadSuccess();
     } catch (error) {
       toast.error((error as Error)?.message || "Something went wrong.");
     } finally {

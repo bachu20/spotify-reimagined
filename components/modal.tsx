@@ -18,7 +18,8 @@ const Modal: React.FC<Props> = ({
 }) => {
   return (
     <Dialog.Root open={isOpen} defaultOpen={isOpen} onOpenChange={onChange}>
-      <Dialog.Trigger />
+      <Dialog.Trigger asChild />
+
       <Dialog.Portal>
         <Dialog.Overlay className="bg-neutral-900/90 backdrop-blur-sm fixed inset-0" />
         <Dialog.Content className="fixed drop-shadow-md border border-neutral-700 top-[50%] left-[50%] max-h-full h-full md:h-auto md:max-h-[85vh] w-full md:w-[90] md:max-w-[450px] translate-x-[-50%] translate-y-[-50%] roudned-md bg-neutral-800 p-[25px] focus:outline-none">
