@@ -24,6 +24,7 @@ const SongItem: React.FC<Props> = ({ song, onClick }) => {
           src={imagePath || "/images/liked.png"}
           alt="image"
           fill
+          sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
         />
       </div>
 
