@@ -41,3 +41,23 @@ export const getSongsByUserId = async (): Promise<Song[]> => {
 
   return (data as any) || [];
 };
+
+export const getSongsByTitle = async (title: string): Promise<Song[]> => {
+  const supabase = createClient(cookies());
+
+  if (!title) {
+    return getSongs();
+  }
+
+  const { data, error } = await supabase
+    .from("songs")
+    .select("*")
+    .ilike("title", `%${title}%`)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error(error);
+  }
+
+  return (data as any) || [];
+};
