@@ -58,6 +58,8 @@ export const MyUserContextProvider = (props: Props) => {
           if (subscriptionPromise.status === "fulfilled") {
             setSubscription(subscriptionPromise.value?.data as Subscription);
           }
+
+          setIsLoadingData(false);
         }
       );
     } else if (!session?.user && !isLoadingData) {

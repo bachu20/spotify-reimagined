@@ -1,13 +1,14 @@
 import { Figtree } from "next/font/google";
 import "./globals.css";
 
+import { getSongsByUserId } from "@/actions/songs";
+import { getActiveProductsWithPrices } from "@/actions/products";
 import React from "react";
 import Sidebar from "@/components/sidebar";
 import SuperbaseProvider from "@/providers/supabase";
 import UserProvider from "@/providers/user";
 import ModalProvider from "@/providers/modal";
 import ToasterProvider from "@/providers/toaster";
-import { getSongsByUserId } from "@/actions/songs";
 import Player from "@/components/player";
 
 const figtree = Figtree({ subsets: ["latin"] });
@@ -30,6 +31,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const userSongs = await getSongsByUserId();
+  const products = await getActiveProductsWithPrices();
 
   return (
     <React.StrictMode>
@@ -38,7 +40,7 @@ export default async function RootLayout({
           <ToasterProvider />
           <SuperbaseProvider>
             <UserProvider>
-              <ModalProvider />
+              <ModalProvider products={products} />
               <Sidebar songs={userSongs}>{children}</Sidebar>
               <Player />
             </UserProvider>
