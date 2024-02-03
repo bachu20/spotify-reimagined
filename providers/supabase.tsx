@@ -25,15 +25,19 @@ export const SupabaseProviderContext = createContext<Props>({
   session: undefined,
 });
 
-const SuperbaseProvider: React.FC<SupabaseProviderProps> = ({ children }) => {
+const SupabaseProvider: React.FC<SupabaseProviderProps> = ({ children }) => {
   const [session, setSession] = useState<Session | undefined>(undefined);
 
   useEffect(() => {
     async function updateSession() {
-      const { data } = await supabase.auth.getSession();
+      try {
+        const { data } = await supabase.auth.getSession();
 
-      if (data && data.session) {
-        setSession(data.session);
+        if (data && data.session) {
+          setSession(data.session);
+        }
+      } catch (error) {
+        console.error("Failed to get session:", error);
       }
     }
 
@@ -57,4 +61,4 @@ const SuperbaseProvider: React.FC<SupabaseProviderProps> = ({ children }) => {
   );
 };
 
-export default SuperbaseProvider;
+export default SupabaseProvider;

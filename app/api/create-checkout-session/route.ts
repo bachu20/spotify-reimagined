@@ -21,7 +21,7 @@ export async function POST(request: Request) {
       email: user?.email || "",
     });
 
-    const session = await stripe.checkout.sessions.create({
+    const { url: session_url } = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       billing_address_collection: "required",
       customer,
@@ -33,7 +33,7 @@ export async function POST(request: Request) {
       cancel_url: `${getURL()}/?canceled=true`,
     });
 
-    return NextResponse.json({ session_url: session.url }, { status: 200 });
+    return NextResponse.json({ session_url }, { status: 200 });
   } catch (err: any) {
     console.log(err);
     return new NextResponse("Internal Error", { status: 500 });
