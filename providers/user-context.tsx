@@ -40,7 +40,7 @@ export const MyUserContextProvider = (props: Props) => {
   };
 
   useEffect(() => {
-    if (session?.user && !isLoadingData && !userDetails && !subscription) {
+    if (session?.user) {
       setIsLoadingData(true);
 
       Promise.allSettled([getUserDetails(), getSubscription()]).then(
@@ -62,9 +62,10 @@ export const MyUserContextProvider = (props: Props) => {
           setIsLoadingData(false);
         }
       );
-    } else if (!session?.user && !isLoadingData) {
+    } else {
       setUserDetails(null);
       setSubscription(null);
+      setIsLoadingData(false);
     }
   }, [session?.user]);
 

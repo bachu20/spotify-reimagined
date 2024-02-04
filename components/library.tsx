@@ -20,12 +20,10 @@ const Library: React.FC<Props> = ({ songs }) => {
   const { user } = useUser();
 
   const onClick = () => {
-    // Handle upload later
     if (!user) {
       return authModal.onOpen();
     }
 
-    // TODO: Check for subscription
     return uploadModal.onOpen();
   };
 
