@@ -12,9 +12,10 @@ import { useRouter } from "next/navigation";
 
 const UploadModal = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isManualUpload, setIsManualUpload] = useState(false);
   const { supabase } = useContext(SupabaseProviderContext);
   const { user } = useUser();
-  const uploadModal = useUploadModal();
+  const { onClose, isOpen } = useUploadModal();
   const router = useRouter();
 
   const { register, handleSubmit, reset } = useForm<FieldValues>({
@@ -29,13 +30,13 @@ const UploadModal = () => {
   const onChange = (open: boolean) => {
     if (!open) {
       reset();
-      uploadModal.onClose();
+      onClose();
     }
   };
 
   const onUploadSuccess = () => {
     router.refresh();
-    uploadModal.onClose();
+    onClose();
     setIsLoading(false);
     reset();
 
@@ -47,7 +48,15 @@ const UploadModal = () => {
       setIsLoading(true);
 
       const imageFile = values.image?.[0];
-      const songFile = values.song?.[0];
+
+      let songFile;
+
+      // set the songFile
+      if (isManualUpload) {
+        songFile = values.song?.[0];
+      } else {
+        const youtubeURL = values.youtubeURL;
+      }
 
       if (!imageFile || !songFile || !user) {
         throw new Error("Missing fields");
@@ -103,48 +112,79 @@ const UploadModal = () => {
     <Modal
       title="Add a song"
       description="Upload an mp3 file"
-      isOpen={uploadModal.isOpen}
+      isOpen={isOpen}
       onChange={onChange}
     >
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-y-4">
-        <Input
-          id="title"
-          disabled={isLoading}
-          {...register("title", { required: true })}
-          placeholder="Song title"
-        />
+        {!isManualUpload ? (
+          <>
+            <span className="inline-block text-center">
+              <a
+                onClick={() => setIsManualUpload(true)}
+                className="text-blue-500 hover:text-blue-600 cursor-pointer transition-colors duration-100 ease-in-out"
+              >
+                Want to upload manually?
+              </a>
+            </span>
 
-        <Input
-          id="author"
-          disabled={isLoading}
-          {...register("author", { required: true })}
-          placeholder="Song author"
-        />
+            <Input
+              id="youtubeURL"
+              disabled={isLoading}
+              {...register("youtubeURL", { required: true })}
+              placeholder="YouTube URL"
+            />
+          </>
+        ) : (
+          <>
+            <span className="inline-block text-center">
+              <a
+                onClick={() => setIsManualUpload(false)}
+                className="text-blue-500 hover:text-blue-600 cursor-pointer transition-colors duration-100 ease-in-out"
+              >
+                Want to upload with a YouTube link?
+              </a>
+            </span>
 
-        <div>
-          <div className="pb-1">Select a song file</div>
-          <Input
-            id="song"
-            type="file"
-            disabled={isLoading}
-            accept=".mp3"
-            {...register("song", { required: true })}
-          />
-        </div>
+            <Input
+              id="title"
+              disabled={isLoading}
+              {...register("title", { required: true })}
+              placeholder="Song title"
+            />
 
-        <div>
-          <div className="pb-1">Select an image</div>
-          <Input
-            id="image"
-            type="file"
-            disabled={isLoading}
-            accept="image/*"
-            {...register("image", { required: true })}
-          />
-        </div>
+            <Input
+              id="author"
+              disabled={isLoading}
+              {...register("author", { required: true })}
+              placeholder="Song author"
+            />
+
+            <div>
+              <div className="pb-1">Select a song file</div>
+              <Input
+                id="song"
+                type="file"
+                disabled={isLoading}
+                accept=".mp3"
+                {...register("song", { required: true })}
+              />
+            </div>
+
+            <div>
+              <div className="pb-1">Select an image</div>
+              <Input
+                id="image"
+                type="file"
+                disabled={isLoading}
+                accept="image/*"
+                {...register("image", { required: true })}
+              />
+            </div>
+          </>
+        )}
 
         <Button disabled={isLoading} type="submit">
-          Create
+          {isManualUpload ? "Create" : "Upload"}
         </Button>
       </form>
     </Modal>

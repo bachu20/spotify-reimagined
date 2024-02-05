@@ -30,6 +30,7 @@
     "typescript": "5.3.3",
     "uniqid": "^5.4.0",
     "use-sound": "^4.0.1",
+    "ytdl-core": "^4.11.5",
     "zustand": "^4.5.0"
   },
   "devDependencies": {
