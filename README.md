@@ -47,11 +47,3 @@ npm run dev
 ## Deployment
 
 This project can be deployed using Vercel. After installing the Supabase integration, all relevant environment variables will be assigned to the project, so the deployment is fully functioning.
-
-## Contributing
-
-Contributions are welcome. Please open an issue or submit a pull request.
-
-## License
-
-This project is licensed under the MIT License.
